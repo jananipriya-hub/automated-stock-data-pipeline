@@ -16,8 +16,7 @@ symbols = ['AAPL','MSFT','GOOGL']
 API_KEY = os.environ.get("ALPHA_VANTAGE_KEY")
 
 for s in symbols:
-  url = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&
-  symbol={s}&apikey={API_KEY}'
+  url = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={s}&apikey={API_KEY}'
   r = requests.get(url)
   data = r.json()
 
