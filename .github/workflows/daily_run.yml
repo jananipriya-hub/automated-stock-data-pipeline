@@ -17,7 +17,7 @@ jobs:
           python-version: '3.13'
 
       - name: Install libraries
-        run: pip install google-cloud-bigquery requests pandas
+        run: pip install google-cloud-bigquery requests pandas db-dtypes pandas-gbq
 
       - name: Run script
         env:
