@@ -38,26 +38,26 @@ for s in symbols:
             "VOLUME": int(quote['06. volume'])
         }]
 
-query = f"SELECT DISTINCT SYMBOL, PRICE_DATE FROM `{table_id}`"
-existing_data = client.query(query).to_dataframe()
-
-final_rows = []
-for row in rows_to_insert:
-    # Check if this specific combo exists
-    exists = existing_data[(existing_data['SYMBOL'] == row['SYMBOL']) & 
-                           (existing_data['PRICE_DATE'] == row['PRICE_DATE'])]
-    
-    if exists.empty:
-        final_rows.append(row)
-    else:
-        print(f"Skipping {row['SYMBOL']} for {row['PRICE_DATE']} - Already exists!")
-
-if final_rows:
-    job = client.load_table_from_json(final_rows, table_id, job_config=job_config)
-    job.result()
-    print("New data added successfully!")
-else:
-    print("No new data to add today.")
+        query = f"SELECT DISTINCT SYMBOL, PRICE_DATE FROM `{table_id}`"
+        existing_data = client.query(query).to_dataframe()
+        
+        final_rows = []
+        for row in rows_to_insert:
+            # Check if this specific combo exists
+            exists = existing_data[(existing_data['SYMBOL'] == row['SYMBOL']) & 
+                                   (existing_data['PRICE_DATE'] == row['PRICE_DATE'])]
+            
+            if exists.empty:
+                final_rows.append(row)
+            else:
+                print(f"Skipping {row['SYMBOL']} for {row['PRICE_DATE']} - Already exists!")
+        
+        if final_rows:
+            job = client.load_table_from_json(final_rows, table_id, job_config=job_config)
+            job.result()
+            print("New data added successfully!")
+        else:
+            print("No new data to add today.")
         job_config = bigquery.LoadJobConfig(write_disposition="WRITE_APPEND")
         try:
             job = client.load_table_from_json(rows_to_insert, table_id, job_config=job_config)
