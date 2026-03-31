@@ -24,6 +24,8 @@ table_id = f"{project_id}.STOCK_DATA.FACT_STOCK_PRICES"
 symbols = ['AAPL', 'MSFT', 'GOOGL']
 API_KEY = os.environ.get("ALPHA_VANTAGE_KEY")
 
+job_config = bigquery.LoadJobConfig(write_disposition="WRITE_APPEND")
+
 for s in symbols:
     url = f"https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={s}&apikey={API_KEY}"
     r = requests.get(url)
@@ -58,12 +60,3 @@ for s in symbols:
             print("New data added successfully!")
         else:
             print("No new data to add today.")
-        job_config = bigquery.LoadJobConfig(write_disposition="WRITE_APPEND")
-        try:
-            job = client.load_table_from_json(rows_to_insert, table_id, job_config=job_config)
-            job.result()
-            print(f"✅ {s} price added to BigQuery.")
-        except Exception as e:
-            print(f"❌ BigQuery Error for {s}: {e}")
-    else:
-        print(f"⚠️ Could not get data for {s}. Check your API Key.")
